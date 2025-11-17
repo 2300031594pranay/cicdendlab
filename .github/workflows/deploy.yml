@@ -10,32 +10,31 @@ permissions:
   pages: write
   id-token: write
 
-env:
-  NODE_VERSION: 18
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 18
 
       - name: Install dependencies
+        working-directory: ./travel-frontend
         run: npm install
 
       - name: Build project
+        working-directory: ./travel-frontend
         run: npm run build
 
-      - name: Upload build folder
+      - name: Upload production build
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: ./travel-frontend/dist
 
   deploy:
     needs: build
